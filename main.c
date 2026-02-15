@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include <libstemmer.h>
 
 // function from my other project
 // it compares two strings, but first one will be converted to lowercase
@@ -75,6 +76,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // init stemmer
+    struct sb_stemmer *stemmer = sb_stemmer_new("english", "UTF_8");
+    if (stemmer == NULL) {
+        printf("Can't create a stemmer structure!\n"
+               "(pointer stemmer is equals to null)\n");
+        return 1;
+    }
+
     // variables
     cJSON *command = NULL;
     cJSON *command_name = NULL;
@@ -102,8 +111,22 @@ int main(int argc, char *argv[]) {
         tag = cJSON_GetArrayItem(command_tags, tag_index);
         while (tag->next != NULL) {
             for (int i = 1; i < argc; i++) {
-                if (strcmp(tag->valuestring, argv[i]) == 0)
+
+                const unsigned char *stemmed_user_input = sb_stemmer_stem(
+                    stemmer,
+                    (const unsigned char*)argv[i],
+                    strlen(argv[i])
+                );
+
+                const unsigned char *stemmed_tag = sb_stemmer_stem(
+                    stemmer,
+                    (const unsigned char*)tag->valuestring,
+                    strlen(tag->valuestring)
+                );
+
+                if (strcmp(stemmed_user_input, stemmed_tag) == 0) 
                     current_score++;
+                    
             }
 
             tag_index++;
@@ -124,9 +147,13 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Best score: %d\n", best_score);
-    printf("Best candidate: %s\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring);
+    if (best_candidate != NULL)
+        printf("Best candidate: %s\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring);
+    else
+        printf("Cannot find anything...\n");
 
     // end of the program
+    sb_stemmer_delete(stemmer);
     cJSON_Delete(json);
     return 0;
 }

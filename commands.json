@@ -5,6 +5,320 @@
         "usage":"ls [path] [args]",
         "args":[["-a", "shows even hidden files"],
                 ["-l", "shows detailed information about each file"]],
-        "tags":["lists", "files", "directory"]
+        "tags":["list", "file", "directory", "listing", "contents", "show", "view"]
+    },
+    {
+        "name":"cd",
+        "description":"changes current working directory",
+        "usage":"cd [directory]",
+        "args":[["..", "go to parent directory"],
+                ["~", "go to home directory"],
+                ["-", "go to previous directory"]],
+        "tags":["navigation", "directory", "path", "change", "move", "folder", "navigate"]
+    },
+    {
+        "name":"pwd",
+        "description":"prints current working directory",
+        "usage":"pwd",
+        "args":[],
+        "tags":["navigation", "directory", "path", "current", "where", "location", "print"]
+    },
+    {
+        "name":"mkdir",
+        "description":"creates new directories",
+        "usage":"mkdir [args] directory_name",
+        "args":[["-p", "create parent directories if needed"],
+                ["-v", "verbose output, show each created directory"],
+                ["-m", "set permissions mode (like chmod)"]],
+        "tags":["create", "directory", "folder", "make", "new", "mkdir"]
+    },
+    {
+        "name":"rmdir",
+        "description":"removes empty directories",
+        "usage":"rmdir [args] directory_name",
+        "args":[["-p", "remove directory and its ancestors"]],
+        "tags":["remove", "directory", "delete", "empty", "rmdir"]
+    },
+    {
+        "name":"rm",
+        "description":"removes files or directories",
+        "usage":"rm [args] file_or_dir",
+        "args":[["-r", "remove directories recursively"],
+                ["-f", "force removal without confirmation"],
+                ["-i", "prompt before each removal"],
+                ["-v", "verbose output"]],
+        "tags":["remove", "delete", "file", "directory", "erase", "rm"]
+    },
+    {
+        "name":"cp",
+        "description":"copies files or directories",
+        "usage":"cp [args] source destination",
+        "args":[["-r", "copy directories recursively"],
+                ["-i", "prompt before overwrite"],
+                ["-u", "copy only when source is newer"],
+                ["-v", "verbose output"],
+                ["-a", "archive mode (preserve attributes)"]],
+        "tags":["copy", "file", "duplicate", "backup", "clone", "cp"]
+    },
+    {
+        "name":"mv",
+        "description":"moves or renames files and directories",
+        "usage":"mv [args] source destination",
+        "args":[["-i", "prompt before overwrite"],
+                ["-u", "move only when source is newer"],
+                ["-v", "verbose output"],
+                ["-n", "do not overwrite existing files"]],
+        "tags":["move", "rename", "file", "directory", "mv"]
+    },
+    {
+        "name":"cat",
+        "description":"concatenates and displays files content",
+        "usage":"cat [args] file1 file2 ...",
+        "args":[["-n", "number all output lines"],
+                ["-b", "number non-empty lines"],
+                ["-s", "squeeze multiple blank lines"],
+                ["-E", "show $ at end of each line"]],
+        "tags":["view", "read", "file", "display", "concatenate", "show", "cat"]
+    },
+    {
+        "name":"less",
+        "description":"view file content page by page",
+        "usage":"less [args] file",
+        "args":[["-N", "show line numbers"],
+                ["-S", "chop long lines (no wrap)"],
+                ["-F", "quit if content fits one screen"],
+                ["-R", "display raw control characters"]],
+        "tags":["view", "read", "pager", "file", "scroll", "browse", "less"]
+    },
+    {
+        "name":"head",
+        "description":"output first part of files",
+        "usage":"head [args] file",
+        "args":[["-n", "number of lines to display (default 10)"],
+                ["-c", "number of bytes to display"],
+                ["-q", "never print headers"],
+                ["-v", "always print headers"]],
+        "tags":["view", "file", "preview", "beginning", "top", "head"]
+    },
+    {
+        "name":"tail",
+        "description":"output last part of files",
+        "usage":"tail [args] file",
+        "args":[["-n", "number of lines to display (default 10)"],
+                ["-f", "follow file as it grows"],
+                ["-F", "follow and retry if file rotates"],
+                ["-c", "number of bytes to display"]],
+        "tags":["view", "file", "monitor", "logs", "end", "follow", "tail"]
+    },
+    {
+        "name":"grep",
+        "description":"search text using patterns",
+        "usage":"grep [args] pattern file",
+        "args":[["-i", "case insensitive search"],
+                ["-r", "recursive search in directories"],
+                ["-v", "invert match (show non-matching lines)"],
+                ["-n", "show line numbers"],
+                ["-l", "show only filenames with matches"],
+                ["-c", "count matching lines"],
+                ["-w", "match whole words only"]],
+        "tags":["search", "text", "pattern", "filter", "find", "match", "regex", "grep"]
+    },
+    {
+        "name":"find",
+        "description":"search for files in directory hierarchy",
+        "usage":"find [path] [expression]",
+        "args":[["-name", "search by filename"],
+                ["-type", "search by type (f=file, d=directory)"],
+                ["-size", "search by file size"],
+                ["-user", "search by owner"],
+                ["-mtime", "search by modification time"],
+                ["-exec", "execute command on found files"]],
+        "tags":["search", "file", "locate", "find", "directory"]
+    },
+    {
+        "name":"chmod",
+        "description":"change file permissions",
+        "usage":"chmod [args] permissions file",
+        "args":[["-R", "apply changes recursively"],
+                ["-v", "verbose output"],
+                ["-c", "report only when changes are made"],
+                ["--reference", "use permissions from reference file"]],
+        "tags":["permissions", "access", "security", "file", "mode", "change", "chmod"]
+    },
+    {
+        "name":"chown",
+        "description":"change file owner and group",
+        "usage":"chown [args] owner[:group] file",
+        "args":[["-R", "apply changes recursively"],
+                ["-v", "verbose output"],
+                ["--reference", "use ownership from reference file"]],
+        "tags":["owner", "permissions", "security", "file", "change", "chown"]
+    },
+    {
+        "name":"ps",
+        "description":"report snapshot of current processes",
+        "usage":"ps [args]",
+        "args":[["-e", "show all processes"],
+                ["-f", "full format listing"],
+                ["-u", "show processes by user"],
+                ["-aux", "show all processes with details"],
+                ["--sort", "sort by criteria"]],
+        "tags":["process", "system", "monitor", "task", "processes", "running", "status", "ps"]
+    },
+    {
+        "name":"kill",
+        "description":"terminate processes by PID",
+        "usage":"kill [signal] PID",
+        "args":[["-9", "SIGKILL - force immediate termination"],
+                ["-15", "SIGTERM - graceful termination (default)"],
+                ["-2", "SIGINT - interrupt (like Ctrl+C)"],
+                ["-l", "list all signal names"]],
+        "tags":["process", "terminate", "signal", "stop", "end", "kill"]
+    },
+    {
+        "name":"df",
+        "description":"report file system disk space usage",
+        "usage":"df [args] [filesystem]",
+        "args":[["-h", "human readable sizes (MB, GB)"],
+                ["-T", "show filesystem type"],
+                ["-i", "show inode information"],
+                ["-a", "include dummy filesystems"]],
+        "tags":["disk", "space", "filesystem", "storage", "disk free", "usage", "df"]
+    },
+    {
+        "name":"du",
+        "description":"estimate file space usage",
+        "usage":"du [args] [directory]",
+        "args":[["-h", "human readable sizes"],
+                ["-s", "summary only"],
+                ["-a", "show all files, not just directories"],
+                ["-c", "produce grand total"],
+                ["--max-depth", "limit directory depth"]],
+        "tags":["disk", "size", "storage", "directory", "disk usage", "du"]
+    },
+    {
+        "name":"tar",
+        "description":"archive files",
+        "usage":"tar [args] archive_name files",
+        "args":[["-c", "create archive"],
+                ["-x", "extract archive"],
+                ["-f", "specify archive filename"],
+                ["-v", "verbose output"],
+                ["-z", "compress with gzip"],
+                ["-j", "compress with bzip2"],
+                ["-t", "list archive contents"]],
+        "tags":["archive", "compress", "backup", "package", "tape archive", "tar"]
+    },
+    {
+        "name":"wget",
+        "description":"download files from internet",
+        "usage":"wget [args] URL",
+        "args":[["-O", "save with different filename"],
+                ["-c", "resume interrupted download"],
+                ["-r", "recursive download"],
+                ["-q", "quiet mode (no output)"],
+                ["--limit-rate", "limit download speed"]],
+        "tags":["download", "network", "internet", "file", "web get", "retrieve", "wget"]
+    },
+    {
+        "name":"curl",
+        "description":"transfer data from/to server",
+        "usage":"curl [args] URL",
+        "args":[["-o", "output to file"],
+                ["-O", "output to file named like remote"],
+                ["-L", "follow redirects"],
+                ["-H", "custom header"],
+                ["-d", "send data (POST)"],
+                ["-X", "specify HTTP method"]],
+        "tags":["download", "network", "http", "api", "client url", "transfer", "curl"]
+    },
+    {
+        "name":"ssh",
+        "description":"secure shell connection",
+        "usage":"ssh [args] user@host",
+        "args":[["-p", "specify port"],
+                ["-i", "use identity file (private key)"],
+                ["-v", "verbose mode"],
+                ["-X", "enable X11 forwarding"],
+                ["-L", "local port forwarding"]],
+        "tags":["remote", "shell", "network", "secure", "secure shell", "login", "ssh"]
+    },
+    {
+        "name":"scp",
+        "description":"secure copy over SSH",
+        "usage":"scp [args] source destination",
+        "args":[["-r", "copy directories recursively"],
+                ["-P", "specify port"],
+                ["-i", "use identity file"],
+                ["-C", "enable compression"],
+                ["-v", "verbose mode"]],
+        "tags":["copy", "remote", "ssh", "file", "secure copy", "scp"]
+    },
+    {
+        "name":"history",
+        "description":"show command history",
+        "usage":"history [args]",
+        "args":[["-c", "clear history"],
+                ["-d", "delete specific history entry"],
+                ["-a", "append history lines from session"],
+                ["-w", "write history to file"]],
+        "tags":["history", "commands", "shell", "past", "recent", "history"]
+    },
+    {
+        "name":"alias",
+        "description":"create command shortcuts",
+        "usage":"alias [name=command]",
+        "args":[["-p", "print all defined aliases"]],
+        "tags":["shortcut", "shell", "custom", "nickname", "alias"]
+    },
+    {
+        "name":"echo",
+        "description":"display line of text",
+        "usage":"echo [args] [string]",
+        "args":[["-n", "do not output trailing newline"],
+                ["-e", "enable interpretation of backslash escapes"],
+                ["-E", "disable interpretation of escapes"]],
+        "tags":["output", "print", "display", "echo"]
+    },
+    {
+        "name":"man",
+        "description":"display manual pages",
+        "usage":"man [args] command",
+        "args":[["-k", "search for keyword"],
+                ["-f", "show short description"],
+                ["-w", "show file location"],
+                ["-a", "display all manual sections"]],
+        "tags":["help", "documentation", "manual", "man"]
+    },
+    {
+        "name":"which",
+        "description":"locate a command",
+        "usage":"which [args] command",
+        "args":[["-a", "show all matching paths"],
+                ["-s", "silent mode (return code only)"]],
+        "tags":["path", "location", "command", "where", "which"]
+    },
+    {
+        "name":"sudo",
+        "description":"execute command as superuser",
+        "usage":"sudo [args] command",
+        "args":[["-u", "execute as specific user"],
+                ["-i", "simulate initial login"],
+                ["-s", "execute shell"],
+                ["-l", "list available commands"],
+                ["-k", "reset timestamp"]],
+        "tags":["root", "privileges", "admin", "superuser", "superuser do", "sudo"]
+    },
+    {
+        "name":"apt",
+        "description":"package management tool",
+        "usage":"apt [command] [package]",
+        "args":[["update", "update package lists"],
+                ["upgrade", "upgrade installed packages"],
+                ["install", "install packages"],
+                ["remove", "remove packages"],
+                ["search", "search for packages"],
+                ["show", "show package details"]],
+        "tags":["package", "install", "software", "debian", "advanced package tool", "apt"]
     }
 ]
