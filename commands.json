@@ -3,13 +3,8 @@
         "name":"ls",
         "description":"lists files of current directory",
         "usage":"ls [path] [args]",
-        "args":[{"name":"-a",
-                 "description":"lists even hidden files",
-                 "tags":["hidden", "secret"]},
-                {"name":"-lh",
-                 "description":"displays detailed information about each file",
-                 "tags":["more", "detailed"]
-                }],
-        "tags":["files", "directories", "directory", "list"]
+        "args":[["-a", "shows even hidden files"],
+                ["-l", "shows detailed information about each file"]],
+        "tags":["lists", "files", "directory"]
     }
 ]
