@@ -70,8 +70,6 @@ int main(int argc, char *argv[]) {
     cJSON *command_tags = NULL;
     cJSON *best_candidate = NULL;
     cJSON *tag = NULL;
-    
-    char tag_stem[256];
 
     int tag_index;
     int best_score = 0;
@@ -86,12 +84,16 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < argc; i++) {
         char lowercase[256];
 
-        for (int j = 0; j < strlen(argv[i]); j++) {
-            if (j > 256)
-                break;
-            lowercase[j] = tolower(argv[i][j]);
+        if (strlen(argv[i]) > 255) {
+            printf("Too long argument: %s\n", argv[i]);
+            return 1;
         }
 
+        int len = strlen(argv[i]);
+        for (int j = 0; j < len; j++) {
+            lowercase[j] = tolower(argv[i][j]);
+        }
+        lowercase[len] = 0;
         const unsigned char *stemmed = sb_stemmer_stem(
                     stemmer,
                     (const unsigned char*)lowercase,
@@ -99,7 +101,9 @@ int main(int argc, char *argv[]) {
                 );
         if (stemmed == NULL) {
             printf("Fatal error: stemmer returned null!\n");
+            return 1;
         }
+        printf("STEMMED: %s\n", stemmed);
         stemmed_args[i - 1] = malloc(sizeof(char) * (strlen(stemmed) + 1));
         strcpy(stemmed_args[i - 1], stemmed);
     }
@@ -119,11 +123,11 @@ int main(int argc, char *argv[]) {
         tag = cJSON_GetArrayItem(command_tags, tag_index);
 
         while (true) {
-
             if (!cJSON_IsString(tag)) {
                     printf("Tag is not a string (bruh)\n");
                     return 1;
                 }
+            char tag_stem[256];
 
             const unsigned char *stemmed_tag = sb_stemmer_stem(
                     stemmer,
@@ -132,15 +136,10 @@ int main(int argc, char *argv[]) {
                 );
             strcpy(tag_stem, stemmed_tag);
 
-            printf("Stemmed tag: %s\n", tag_stem);
-
             for (int i = 1; i < argc; i++) {
-                printf("Stemmed arg: %s\n", stemmed_args[i - 1]);
-
-                if (strcmp(tag_stem, stemmed_args[i]) == 0)
+                if (strcmp(tag_stem, stemmed_args[i - 1]) == 0)
                     current_score++;
             }
-
 
             if (tag->next == NULL)
                 break;
