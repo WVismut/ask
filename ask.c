@@ -6,25 +6,6 @@
 #include <ctype.h>
 #include <libstemmer.h>
 
-// function from my other project
-// it compares two strings, but first one will be converted to lowercase
-bool custom_compare(char *first_operand, char *second_operand) {
-    char res[4096];
-    int i;
-    // first operand will be converted to lowercase
-    for (i = 0; i < strlen(first_operand); i++) {
-        res[i] = tolower(first_operand[i]);
-    }
-
-    res[i] = 0;
-
-    if (strcmp(res, second_operand) == 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 int main(int argc, char *argv[]) {
     // if no arguments provided
     if (argc == 1) {
@@ -90,13 +71,39 @@ int main(int argc, char *argv[]) {
     cJSON *best_candidate = NULL;
     cJSON *tag = NULL;
     
-    char user_stem[256];
     char tag_stem[256];
 
     int tag_index;
     int best_score = 0;
     int current_score;
     int commands_index = 0;
+    int max_len = 0;
+
+    int *tag_frequency = malloc(sizeof(int) * (argc - 1));
+    char **stemmed_args = malloc(sizeof(char*) * (argc - 1));
+
+    // stemm arguments and convert to lowercase
+    for (int i = 1; i < argc; i++) {
+        char lowercase[256];
+
+        for (int j = 0; j < strlen(argv[i]); j++) {
+            if (j > 256)
+                break;
+            lowercase[j] = tolower(argv[i][j]);
+        }
+
+        const unsigned char *stemmed = sb_stemmer_stem(
+                    stemmer,
+                    (const unsigned char*)lowercase,
+                    strlen(lowercase)
+                );
+        if (stemmed == NULL) {
+            printf("Fatal error: stemmer returned null!\n");
+        }
+        stemmed_args[i - 1] = malloc(sizeof(char) * (strlen(stemmed) + 1));
+        strcpy(stemmed_args[i - 1], stemmed);
+    }
+
     // search loop
     while (true) {
         // reset current score
@@ -112,33 +119,28 @@ int main(int argc, char *argv[]) {
         tag = cJSON_GetArrayItem(command_tags, tag_index);
 
         while (true) {
-            for (int i = 1; i < argc; i++) {
 
-                if (!cJSON_IsString(tag)) {
+            if (!cJSON_IsString(tag)) {
                     printf("Tag is not a string (bruh)\n");
+                    return 1;
                 }
 
-                const unsigned char *stemmed_user_input = sb_stemmer_stem(
-                    stemmer,
-                    (const unsigned char*)argv[i],
-                    strlen(argv[i])
-                );
-                strcpy(user_stem, stemmed_user_input);
-
-                // yes, we need to stemm tags
-                // thats because sometimes stemmer returns unexprected results
-                // like, wdym delete becomes delet 
-                const unsigned char *stemmed_tag = sb_stemmer_stem(
+            const unsigned char *stemmed_tag = sb_stemmer_stem(
                     stemmer,
                     (const unsigned char*)tag->valuestring,
                     strlen(tag->valuestring)
                 );
-                strcpy(tag_stem, stemmed_tag);
+            strcpy(tag_stem, stemmed_tag);
 
-                if (strcmp(tag_stem, user_stem) == 0)
+            printf("Stemmed tag: %s\n", tag_stem);
+
+            for (int i = 1; i < argc; i++) {
+                printf("Stemmed arg: %s\n", stemmed_args[i - 1]);
+
+                if (strcmp(tag_stem, stemmed_args[i]) == 0)
                     current_score++;
-                    
             }
+
 
             if (tag->next == NULL)
                 break;
@@ -146,7 +148,8 @@ int main(int argc, char *argv[]) {
             tag_index++;
             tag = cJSON_GetArrayItem(command_tags, tag_index);
         }
-        
+
+
         if (current_score > best_score) {
             best_score = current_score;
             best_candidate = command;
@@ -159,6 +162,10 @@ int main(int argc, char *argv[]) {
         // update the value of *command var
         commands_index++;
     }
+
+    // free
+    free(stemmed_args);
+    free(tag_frequency);
 
     printf("Best score: %d\n", best_score);
     if (best_candidate != NULL)
