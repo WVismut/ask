@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FILE *commands_file = fopen("/home/fluttershy/c/ask/commands.json", "r");
+    FILE *commands_file = fopen("commands.json", "r");
     if (commands_file == NULL) {
         printf("Error opening file!\n"
                "(commands_file pointer is equals to null)\n"
