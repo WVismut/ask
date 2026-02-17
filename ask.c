@@ -7,17 +7,23 @@
 #include <libstemmer.h>
 #include <math.h>
 
+#define BG_GREEN   "\033[42m"
+#define BG_YELLOW  "\033[43m"
+#define BG_RED     "\033[41m"
+#define RESET      "\033[0m"
+
 int main(int argc, char *argv[]) {
     // if no arguments provided
     if (argc == 1) {
         printf("You should provide at least one argumnet!\n"
                "Here are a few examples, of how you should use this command\n"
                "ask How to see content of a text file?\n"
-               "ask How to create a directory?\n");
+               "ask How to create a directory?\n"
+               "Or just type keywords\n");
         return 1;
     }
 
-    FILE *commands_file = fopen("commands.json", "r");
+    FILE *commands_file = fopen("/home/fluttershy/c/ask/commands.json", "r");
     if (commands_file == NULL) {
         printf("Error opening file!\n"
                "(commands_file pointer is equals to null)\n"
@@ -135,7 +141,7 @@ int main(int argc, char *argv[]) {
 
             const unsigned char *stemmed_tag = sb_stemmer_stem(
                     stemmer,
-                    (const unsigned char*)tag->valuestring,
+                    (const char*)tag->valuestring,
                     strlen(tag->valuestring)
                 );
             strcpy(tag_stem, stemmed_tag);
@@ -144,7 +150,6 @@ int main(int argc, char *argv[]) {
                 if (strcmp(tag_stem, stemmed_args[i - 1]) == 0) {
                     tag_frequency[i - 1]++;
                     scores[commands_index * (argc - 1) + (i - 1)] = true;
-                    printf("Find a match!!!\n");
                 }
             }
 
@@ -170,11 +175,8 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < json_size; i++) {
 
         current_score = 0;
-        for (int j = 0; j < (argc - 1); j++) {
-            printf("score[i * (argc - 1) + j]: %d\n", (int)scores[i * (argc - 1) + j]);
+        for (int j = 0; j < (argc - 1); j++)
             current_score += (double)(scores[i * (argc - 1) + j]) * log((json_size / (tag_frequency[j] + 1)));
-        }
-        printf("Score: %lf\n", current_score);
 
         if (current_score > best_score) {
             best_score = current_score;
@@ -183,13 +185,26 @@ int main(int argc, char *argv[]) {
     }
 
     best_candidate = cJSON_GetArrayItem(json, best_candidate_index);
-    if (best_candidate_index == -1) {
-        printf("Best candidate is equals to null!\n");
-        printf("Best candidate index: %d\n", best_candidate_index);
-        return 1;
+    if (best_score == 0) {
+        printf("Nothing...\n");
+        return 0;
     }
-    printf("Best score: %lf\n", best_score);
-    printf("Best candidate: %s\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring); // error here
+
+    printf("Best candidate: " BG_GREEN "%s" RESET "\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring);
+    printf("Description: %s\n", cJSON_GetObjectItem(best_candidate, "description")->valuestring);
+    printf("Usage: %s\n", cJSON_GetObjectItem(best_candidate, "usage")->valuestring);
+    printf("\n");
+    printf("Relevance of your keywords.\n" BG_GREEN "green" RESET " - keyword corresponds to given result\n" 
+                                           BG_YELLOW "yellow" RESET " - keyword does exist bu doesn't correspond to result\n"
+                                           BG_RED "red" RESET " - keyword doesn't exist\n" RESET);
+    for (int i = 1; i < argc; i++)
+        if (scores[best_candidate_index * (argc - 1) + (i - 1)])
+            printf(BG_GREEN "%s" RESET " ", argv[i]);
+        else if (tag_frequency[i - 1] > 0)
+            printf(BG_YELLOW "%s" RESET " ", argv[i]);
+        else
+            printf(BG_RED "%s" RESET " ", argv[i]);
+    printf("\n");
 
     // free
     free(stemmed_args);

@@ -1,324 +1,506 @@
 [
     {
-        "name":"ls",
-        "description":"lists files of current directory",
-        "usage":"ls [path] [args]",
-        "args":[["-a", "shows even hidden files"],
-                ["-l", "shows detailed information about each file"]],
-        "tags":["list", "file", "directory", "listing", "contents", "show", "view"]
+        "name": "ls",
+        "description": "lists files of current directory",
+        "usage": "ls [path] [args]",
+        "args": [
+            ["-a", "shows even hidden files"],
+            ["-l", "shows detailed information about each file"]
+        ],
+        "tags": ["list", "file", "directory", "listing", "contents", "show", "view", "hidden", "permissions", "details", "size", "owner"]
     },
     {
-        "name":"cd",
-        "description":"changes current working directory",
-        "usage":"cd [directory]",
-        "args":[["..", "go to parent directory"],
-                ["~", "go to home directory"],
-                ["-", "go to previous directory"]],
-        "tags":["navigation", "directory", "path", "change", "move", "folder", "navigate"]
+        "name": "cd",
+        "description": "changes current working directory",
+        "usage": "cd [directory]",
+        "args": [
+            ["..", "go to parent directory"],
+            ["~", "go to home directory"],
+            ["-", "go to previous directory"]
+        ],
+        "tags": ["navigation", "directory", "path", "change", "move", "folder", "navigate", "switch", "goto", "location", "home", "parent", "previous"]
     },
     {
-        "name":"pwd",
-        "description":"prints current working directory",
-        "usage":"pwd",
-        "args":[],
-        "tags":["navigation", "directory", "path", "current", "where", "location", "print"]
+        "name": "pwd",
+        "description": "prints current working directory",
+        "usage": "pwd",
+        "args": [],
+        "tags": ["navigation", "directory", "path", "current", "where", "location", "print", "pwd", "working"]
     },
     {
-        "name":"mkdir",
-        "description":"creates new directories",
-        "usage":"mkdir [args] directory_name",
-        "args":[["-p", "create parent directories if needed"],
-                ["-v", "verbose output, show each created directory"],
-                ["-m", "set permissions mode (like chmod)"]],
-        "tags":["create", "directory", "folder", "make", "new", "mkdir"]
+        "name": "mkdir",
+        "description": "creates new directories",
+        "usage": "mkdir [args] directory_name",
+        "args": [
+            ["-p", "create parent directories if needed"],
+            ["-v", "verbose output, show each created directory"],
+            ["-m", "set permissions mode (like chmod)"]
+        ],
+        "tags": ["create", "directory", "folder", "make", "new", "mkdir", "parent", "permissions", "verbose"]
     },
     {
-        "name":"rmdir",
-        "description":"removes empty directories",
-        "usage":"rmdir [args] directory_name",
-        "args":[["-p", "remove directory and its ancestors"]],
-        "tags":["remove", "directory", "delete", "empty", "rmdir"]
+        "name": "rmdir",
+        "description": "removes empty directories",
+        "usage": "rmdir [args] directory_name",
+        "args": [
+            ["-p", "remove directory and its ancestors"]
+        ],
+        "tags": ["remove", "directory", "delete", "empty", "rmdir", "parent"]
     },
     {
-        "name":"rm",
-        "description":"removes files or directories",
-        "usage":"rm [args] file_or_dir",
-        "args":[["-r", "remove directories recursively"],
-                ["-f", "force removal without confirmation"],
-                ["-i", "prompt before each removal"],
-                ["-v", "verbose output"]],
-        "tags":["remove", "delete", "file", "directory", "erase", "rm"]
+        "name": "rm",
+        "description": "removes files or directories",
+        "usage": "rm [args] file_or_dir",
+        "args": [
+            ["-r", "remove directories recursively"],
+            ["-f", "force removal without confirmation"],
+            ["-i", "prompt before each removal"],
+            ["-v", "verbose output"]
+        ],
+        "tags": ["remove", "delete", "file", "directory", "erase", "rm", "recursive", "force", "interactive", "verbose"]
     },
     {
-        "name":"cp",
-        "description":"copies files or directories",
-        "usage":"cp [args] source destination",
-        "args":[["-r", "copy directories recursively"],
-                ["-i", "prompt before overwrite"],
-                ["-u", "copy only when source is newer"],
-                ["-v", "verbose output"],
-                ["-a", "archive mode (preserve attributes)"]],
-        "tags":["copy", "file", "duplicate", "backup", "clone", "cp"]
+        "name": "cp",
+        "description": "copies files or directories",
+        "usage": "cp [args] source destination",
+        "args": [
+            ["-r", "copy directories recursively"],
+            ["-i", "prompt before overwrite"],
+            ["-u", "copy only when source is newer"],
+            ["-v", "verbose output"],
+            ["-a", "archive mode (preserve attributes)"]
+        ],
+        "tags": ["copy", "file", "duplicate", "backup", "clone", "cp", "recursive", "interactive", "update", "verbose", "archive", "preserve"]
     },
     {
-        "name":"mv",
-        "description":"moves or renames files and directories",
-        "usage":"mv [args] source destination",
-        "args":[["-i", "prompt before overwrite"],
-                ["-u", "move only when source is newer"],
-                ["-v", "verbose output"],
-                ["-n", "do not overwrite existing files"]],
-        "tags":["move", "rename", "file", "directory", "mv"]
+        "name": "mv",
+        "description": "moves or renames files and directories",
+        "usage": "mv [args] source destination",
+        "args": [
+            ["-i", "prompt before overwrite"],
+            ["-u", "move only when source is newer"],
+            ["-v", "verbose output"],
+            ["-n", "do not overwrite existing files"]
+        ],
+        "tags": ["move", "rename", "file", "directory", "mv", "interactive", "update", "verbose"]
     },
     {
-        "name":"cat",
-        "description":"concatenates and displays files content",
-        "usage":"cat [args] file1 file2 ...",
-        "args":[["-n", "number all output lines"],
-                ["-b", "number non-empty lines"],
-                ["-s", "squeeze multiple blank lines"],
-                ["-E", "show $ at end of each line"]],
-        "tags":["view", "read", "file", "display", "concatenate", "show", "cat"]
+        "name": "cat",
+        "description": "concatenates and displays files content",
+        "usage": "cat [args] file1 file2 ...",
+        "args": [
+            ["-n", "number all output lines"],
+            ["-b", "number non-empty lines"],
+            ["-s", "squeeze multiple blank lines"],
+            ["-E", "show $ at end of each line"]
+        ],
+        "tags": ["view", "read", "file", "display", "concatenate", "show", "cat", "number", "squeeze"]
     },
     {
-        "name":"less",
-        "description":"view file content page by page",
-        "usage":"less [args] file",
-        "args":[["-N", "show line numbers"],
-                ["-S", "chop long lines (no wrap)"],
-                ["-F", "quit if content fits one screen"],
-                ["-R", "display raw control characters"]],
-        "tags":["view", "read", "pager", "file", "scroll", "browse", "less"]
+        "name": "less",
+        "description": "view file content page by page",
+        "usage": "less [args] file",
+        "args": [
+            ["-N", "show line numbers"],
+            ["-S", "chop long lines (no wrap)"],
+            ["-F", "quit if content fits one screen"],
+            ["-R", "display raw control characters"]
+        ],
+        "tags": ["view", "read", "pager", "file", "scroll", "browse", "less", "numbers", "chop", "quit", "raw"]
     },
     {
-        "name":"head",
-        "description":"output first part of files",
-        "usage":"head [args] file",
-        "args":[["-n", "number of lines to display (default 10)"],
-                ["-c", "number of bytes to display"],
-                ["-q", "never print headers"],
-                ["-v", "always print headers"]],
-        "tags":["view", "file", "preview", "beginning", "top", "head"]
+        "name": "head",
+        "description": "output first part of files",
+        "usage": "head [args] file",
+        "args": [
+            ["-n", "number of lines to display (default 10)"],
+            ["-c", "number of bytes to display"],
+            ["-q", "never print headers"],
+            ["-v", "always print headers"]
+        ],
+        "tags": ["view", "file", "preview", "beginning", "top", "head", "lines", "bytes", "first", "header"]
     },
     {
-        "name":"tail",
-        "description":"output last part of files",
-        "usage":"tail [args] file",
-        "args":[["-n", "number of lines to display (default 10)"],
-                ["-f", "follow file as it grows"],
-                ["-F", "follow and retry if file rotates"],
-                ["-c", "number of bytes to display"]],
-        "tags":["view", "file", "monitor", "logs", "end", "follow", "tail"]
+        "name": "tail",
+        "description": "output last part of files",
+        "usage": "tail [args] file",
+        "args": [
+            ["-n", "number of lines to display (default 10)"],
+            ["-f", "follow file as it grows"],
+            ["-F", "follow and retry if file rotates"],
+            ["-c", "number of bytes to display"]
+        ],
+        "tags": ["view", "file", "monitor", "logs", "end", "follow", "tail", "lines", "bytes", "retry"]
     },
     {
-        "name":"grep",
-        "description":"search text using patterns",
-        "usage":"grep [args] pattern file",
-        "args":[["-i", "case insensitive search"],
-                ["-r", "recursive search in directories"],
-                ["-v", "invert match (show non-matching lines)"],
-                ["-n", "show line numbers"],
-                ["-l", "show only filenames with matches"],
-                ["-c", "count matching lines"],
-                ["-w", "match whole words only"]],
-        "tags":["search", "text", "pattern", "filter", "find", "match", "regex", "grep"]
+        "name": "grep",
+        "description": "search text using patterns",
+        "usage": "grep [args] pattern file",
+        "args": [
+            ["-i", "case insensitive search"],
+            ["-r", "recursive search in directories"],
+            ["-v", "invert match (show non-matching lines)"],
+            ["-n", "show line numbers"],
+            ["-l", "show only filenames with matches"],
+            ["-c", "count matching lines"],
+            ["-w", "match whole words only"]
+        ],
+        "tags": ["search", "text", "pattern", "filter", "find", "match", "regex", "grep", "insensitive", "recursive", "invert", "number", "count", "word"]
     },
     {
-        "name":"find",
-        "description":"search for files in directory hierarchy",
-        "usage":"find [path] [expression]",
-        "args":[["-name", "search by filename"],
-                ["-type", "search by type (f=file, d=directory)"],
-                ["-size", "search by file size"],
-                ["-user", "search by owner"],
-                ["-mtime", "search by modification time"],
-                ["-exec", "execute command on found files"]],
-        "tags":["search", "file", "locate", "find", "directory"]
+        "name": "find",
+        "description": "search for files in directory hierarchy",
+        "usage": "find [path] [expression]",
+        "args": [
+            ["-name", "search by filename"],
+            ["-type", "search by type (f=file, d=directory)"],
+            ["-size", "search by file size"],
+            ["-user", "search by owner"],
+            ["-mtime", "search by modification time"],
+            ["-exec", "execute command on found files"]
+        ],
+        "tags": ["search", "file", "locate", "find", "directory", "name", "type", "size", "user", "time", "exec"]
     },
     {
-        "name":"chmod",
-        "description":"change file permissions",
-        "usage":"chmod [args] permissions file",
-        "args":[["-R", "apply changes recursively"],
-                ["-v", "verbose output"],
-                ["-c", "report only when changes are made"],
-                ["--reference", "use permissions from reference file"]],
-        "tags":["permissions", "access", "security", "file", "mode", "change", "chmod"]
+        "name": "chmod",
+        "description": "change file permissions",
+        "usage": "chmod [args] permissions file",
+        "args": [
+            ["-R", "apply changes recursively"],
+            ["-v", "verbose output"],
+            ["-c", "report only when changes are made"],
+            ["--reference", "use permissions from reference file"]
+        ],
+        "tags": ["permissions", "access", "security", "file", "mode", "change", "chmod", "recursive", "verbose", "reference"]
     },
     {
-        "name":"chown",
-        "description":"change file owner and group",
-        "usage":"chown [args] owner[:group] file",
-        "args":[["-R", "apply changes recursively"],
-                ["-v", "verbose output"],
-                ["--reference", "use ownership from reference file"]],
-        "tags":["owner", "permissions", "security", "file", "change", "chown"]
+        "name": "chown",
+        "description": "change file owner and group",
+        "usage": "chown [args] owner[:group] file",
+        "args": [
+            ["-R", "apply changes recursively"],
+            ["-v", "verbose output"],
+            ["--reference", "use ownership from reference file"]
+        ],
+        "tags": ["owner", "permissions", "security", "file", "change", "chown", "recursive", "verbose", "reference", "group"]
     },
     {
-        "name":"ps",
-        "description":"report snapshot of current processes",
-        "usage":"ps [args]",
-        "args":[["-e", "show all processes"],
-                ["-f", "full format listing"],
-                ["-u", "show processes by user"],
-                ["-aux", "show all processes with details"],
-                ["--sort", "sort by criteria"]],
-        "tags":["process", "system", "monitor", "task", "processes", "running", "status", "ps"]
+        "name": "ps",
+        "description": "report snapshot of current processes",
+        "usage": "ps [args]",
+        "args": [
+            ["-e", "show all processes"],
+            ["-f", "full format listing"],
+            ["-u", "show processes by user"],
+            ["-aux", "show all processes with details"],
+            ["--sort", "sort by criteria"]
+        ],
+        "tags": ["process", "system", "monitor", "task", "processes", "running", "status", "ps", "all", "full", "user", "sort", "aux"]
     },
     {
-        "name":"kill",
-        "description":"terminate processes by PID",
-        "usage":"kill [signal] PID",
-        "args":[["-9", "SIGKILL - force immediate termination"],
-                ["-15", "SIGTERM - graceful termination (default)"],
-                ["-2", "SIGINT - interrupt (like Ctrl+C)"],
-                ["-l", "list all signal names"]],
-        "tags":["process", "terminate", "signal", "stop", "end", "kill"]
+        "name": "kill",
+        "description": "terminate processes by PID",
+        "usage": "kill [signal] PID",
+        "args": [
+            ["-9", "SIGKILL - force immediate termination"],
+            ["-15", "SIGTERM - graceful termination (default)"],
+            ["-2", "SIGINT - interrupt (like Ctrl+C)"],
+            ["-l", "list all signal names"]
+        ],
+        "tags": ["process", "terminate", "signal", "stop", "end", "kill", "force", "graceful", "interrupt", "list", "pid"]
     },
     {
-        "name":"df",
-        "description":"report file system disk space usage",
-        "usage":"df [args] [filesystem]",
-        "args":[["-h", "human readable sizes (MB, GB)"],
-                ["-T", "show filesystem type"],
-                ["-i", "show inode information"],
-                ["-a", "include dummy filesystems"]],
-        "tags":["disk", "space", "filesystem", "storage", "disk free", "usage", "df"]
+        "name": "df",
+        "description": "report file system disk space usage",
+        "usage": "df [args] [filesystem]",
+        "args": [
+            ["-h", "human readable sizes (MB, GB)"],
+            ["-T", "show filesystem type"],
+            ["-i", "show inode information"],
+            ["-a", "include dummy filesystems"]
+        ],
+        "tags": ["disk", "space", "filesystem", "storage", "disk free", "usage", "df", "human", "type", "inode", "all"]
     },
     {
-        "name":"du",
-        "description":"estimate file space usage",
-        "usage":"du [args] [directory]",
-        "args":[["-h", "human readable sizes"],
-                ["-s", "summary only"],
-                ["-a", "show all files, not just directories"],
-                ["-c", "produce grand total"],
-                ["--max-depth", "limit directory depth"]],
-        "tags":["disk", "size", "storage", "directory", "disk usage", "du"]
+        "name": "du",
+        "description": "estimate file space usage",
+        "usage": "du [args] [directory]",
+        "args": [
+            ["-h", "human readable sizes"],
+            ["-s", "summary only"],
+            ["-a", "show all files, not just directories"],
+            ["-c", "produce grand total"],
+            ["--max-depth", "limit directory depth"]
+        ],
+        "tags": ["disk", "size", "storage", "directory", "disk usage", "du", "human", "summary", "all", "total", "depth"]
     },
     {
-        "name":"tar",
-        "description":"archive files",
-        "usage":"tar [args] archive_name files",
-        "args":[["-c", "create archive"],
-                ["-x", "extract archive"],
-                ["-f", "specify archive filename"],
-                ["-v", "verbose output"],
-                ["-z", "compress with gzip"],
-                ["-j", "compress with bzip2"],
-                ["-t", "list archive contents"]],
-        "tags":["archive", "compress", "backup", "package", "tape archive", "tar"]
+        "name": "tar",
+        "description": "archive files",
+        "usage": "tar [args] archive_name files",
+        "args": [
+            ["-c", "create archive"],
+            ["-x", "extract archive"],
+            ["-f", "specify archive filename"],
+            ["-v", "verbose output"],
+            ["-z", "compress with gzip"],
+            ["-j", "compress with bzip2"],
+            ["-t", "list archive contents"]
+        ],
+        "tags": ["archive", "compress", "backup", "package", "tape archive", "tar", "create", "extract", "verbose", "gzip", "bzip2", "list", "file"]
     },
     {
-        "name":"wget",
-        "description":"download files from internet",
-        "usage":"wget [args] URL",
-        "args":[["-O", "save with different filename"],
-                ["-c", "resume interrupted download"],
-                ["-r", "recursive download"],
-                ["-q", "quiet mode (no output)"],
-                ["--limit-rate", "limit download speed"]],
-        "tags":["download", "network", "internet", "file", "web get", "retrieve", "wget"]
+        "name": "wget",
+        "description": "download files from internet",
+        "usage": "wget [args] URL",
+        "args": [
+            ["-O", "save with different filename"],
+            ["-c", "resume interrupted download"],
+            ["-r", "recursive download"],
+            ["-q", "quiet mode (no output)"],
+            ["--limit-rate", "limit download speed"]
+        ],
+        "tags": ["download", "network", "internet", "file", "web get", "retrieve", "wget", "output", "resume", "recursive", "quiet", "limit"]
     },
     {
-        "name":"curl",
-        "description":"transfer data from/to server",
-        "usage":"curl [args] URL",
-        "args":[["-o", "output to file"],
-                ["-O", "output to file named like remote"],
-                ["-L", "follow redirects"],
-                ["-H", "custom header"],
-                ["-d", "send data (POST)"],
-                ["-X", "specify HTTP method"]],
-        "tags":["download", "network", "http", "api", "client url", "transfer", "curl"]
+        "name": "curl",
+        "description": "transfer data from/to server",
+        "usage": "curl [args] URL",
+        "args": [
+            ["-o", "output to file"],
+            ["-O", "output to file named like remote"],
+            ["-L", "follow redirects"],
+            ["-H", "custom header"],
+            ["-d", "send data (POST)"],
+            ["-X", "specify HTTP method"]
+        ],
+        "tags": ["download", "network", "http", "api", "client url", "transfer", "curl", "output", "redirect", "header", "data", "method"]
     },
     {
-        "name":"ssh",
-        "description":"secure shell connection",
-        "usage":"ssh [args] user@host",
-        "args":[["-p", "specify port"],
-                ["-i", "use identity file (private key)"],
-                ["-v", "verbose mode"],
-                ["-X", "enable X11 forwarding"],
-                ["-L", "local port forwarding"]],
-        "tags":["remote", "shell", "network", "secure", "secure shell", "login", "ssh"]
+        "name": "ssh",
+        "description": "secure shell connection",
+        "usage": "ssh [args] user@host",
+        "args": [
+            ["-p", "specify port"],
+            ["-i", "use identity file (private key)"],
+            ["-v", "verbose mode"],
+            ["-X", "enable X11 forwarding"],
+            ["-L", "local port forwarding"]
+        ],
+        "tags": ["remote", "shell", "network", "secure", "secure shell", "login", "ssh", "port", "identity", "verbose", "forwarding", "x11"]
     },
     {
-        "name":"scp",
-        "description":"secure copy over SSH",
-        "usage":"scp [args] source destination",
-        "args":[["-r", "copy directories recursively"],
-                ["-P", "specify port"],
-                ["-i", "use identity file"],
-                ["-C", "enable compression"],
-                ["-v", "verbose mode"]],
-        "tags":["copy", "remote", "ssh", "file", "secure copy", "scp"]
+        "name": "scp",
+        "description": "secure copy over SSH",
+        "usage": "scp [args] source destination",
+        "args": [
+            ["-r", "copy directories recursively"],
+            ["-P", "specify port"],
+            ["-i", "use identity file"],
+            ["-C", "enable compression"],
+            ["-v", "verbose mode"]
+        ],
+        "tags": ["copy", "remote", "ssh", "file", "secure copy", "scp", "recursive", "port", "identity", "compression", "verbose"]
     },
     {
-        "name":"history",
-        "description":"show command history",
-        "usage":"history [args]",
-        "args":[["-c", "clear history"],
-                ["-d", "delete specific history entry"],
-                ["-a", "append history lines from session"],
-                ["-w", "write history to file"]],
-        "tags":["history", "commands", "shell", "past", "recent", "history"]
+        "name": "history",
+        "description": "show command history",
+        "usage": "history [args]",
+        "args": [
+            ["-c", "clear history"],
+            ["-d", "delete specific history entry"],
+            ["-a", "append history lines from session"],
+            ["-w", "write history to file"]
+        ],
+        "tags": ["history", "commands", "shell", "past", "recent", "history", "clear", "delete", "append", "write"]
     },
     {
-        "name":"alias",
-        "description":"create command shortcuts",
-        "usage":"alias [name=command]",
-        "args":[["-p", "print all defined aliases"]],
-        "tags":["shortcut", "shell", "custom", "nickname", "alias"]
+        "name": "alias",
+        "description": "create command shortcuts",
+        "usage": "alias [name=command]",
+        "args": [
+            ["-p", "print all defined aliases"]
+        ],
+        "tags": ["shortcut", "shell", "custom", "nickname", "alias", "print"]
     },
     {
-        "name":"echo",
-        "description":"display line of text",
-        "usage":"echo [args] [string]",
-        "args":[["-n", "do not output trailing newline"],
-                ["-e", "enable interpretation of backslash escapes"],
-                ["-E", "disable interpretation of escapes"]],
-        "tags":["output", "print", "display", "echo"]
+        "name": "echo",
+        "description": "display line of text",
+        "usage": "echo [args] [string]",
+        "args": [
+            ["-n", "do not output trailing newline"],
+            ["-e", "enable interpretation of backslash escapes"],
+            ["-E", "disable interpretation of escapes"]
+        ],
+        "tags": ["output", "print", "display", "echo", "newline", "escape"]
     },
     {
-        "name":"man",
-        "description":"display manual pages",
-        "usage":"man [args] command",
-        "args":[["-k", "search for keyword"],
-                ["-f", "show short description"],
-                ["-w", "show file location"],
-                ["-a", "display all manual sections"]],
-        "tags":["help", "documentation", "manual", "man"]
+        "name": "man",
+        "description": "display manual pages",
+        "usage": "man [args] command",
+        "args": [
+            ["-k", "search for keyword"],
+            ["-f", "show short description"],
+            ["-w", "show file location"],
+            ["-a", "display all manual sections"]
+        ],
+        "tags": ["help", "documentation", "manual", "man", "search", "description", "file", "all"]
     },
     {
-        "name":"which",
-        "description":"locate a command",
-        "usage":"which [args] command",
-        "args":[["-a", "show all matching paths"],
-                ["-s", "silent mode (return code only)"]],
-        "tags":["path", "location", "command", "where", "which"]
+        "name": "which",
+        "description": "locate a command",
+        "usage": "which [args] command",
+        "args": [
+            ["-a", "show all matching paths"],
+            ["-s", "silent mode (return code only)"]
+        ],
+        "tags": ["path", "location", "command", "where", "which", "all", "silent"]
     },
     {
-        "name":"sudo",
-        "description":"execute command as superuser",
-        "usage":"sudo [args] command",
-        "args":[["-u", "execute as specific user"],
-                ["-i", "simulate initial login"],
-                ["-s", "execute shell"],
-                ["-l", "list available commands"],
-                ["-k", "reset timestamp"]],
-        "tags":["root", "privileges", "admin", "superuser", "superuser do", "sudo"]
+        "name": "sudo",
+        "description": "execute command as superuser",
+        "usage": "sudo [args] command",
+        "args": [
+            ["-u", "execute as specific user"],
+            ["-i", "simulate initial login"],
+            ["-s", "execute shell"],
+            ["-l", "list available commands"],
+            ["-k", "reset timestamp"]
+        ],
+        "tags": ["root", "privileges", "admin", "superuser", "superuser do", "sudo", "user", "login", "shell", "list", "reset"]
     },
     {
-        "name":"apt",
-        "description":"package management tool",
-        "usage":"apt [command] [package]",
-        "args":[["update", "update package lists"],
-                ["upgrade", "upgrade installed packages"],
-                ["install", "install packages"],
-                ["remove", "remove packages"],
-                ["search", "search for packages"],
-                ["show", "show package details"]],
-        "tags":["package", "install", "software", "debian", "advanced package tool", "apt"]
+        "name": "apt",
+        "description": "package management tool",
+        "usage": "apt [command] [package]",
+        "args": [
+            ["update", "update package lists"],
+            ["upgrade", "upgrade installed packages"],
+            ["install", "install packages"],
+            ["remove", "remove packages"],
+            ["search", "search for packages"],
+            ["show", "show package details"]
+        ],
+        "tags": ["package", "install", "software", "debian", "advanced package tool", "apt", "update", "upgrade", "system", "remove", "search", "show"]
+    },
+    {
+        "name": "touch",
+        "description": "change file timestamps or create empty files",
+        "usage": "touch [args] file",
+        "args": [
+            ["-a", "change access time only"],
+            ["-m", "change modification time only"],
+            ["-c", "do not create any files"],
+            ["-t", "use specific timestamp"],
+            ["-r", "use timestamp of reference file"]
+        ],
+        "tags": ["create", "file", "timestamp", "modify", "access", "time", "touch"]
+    },
+    {
+        "name": "ln",
+        "description": "create hard or symbolic links to files",
+        "usage": "ln [args] target link_name",
+        "args": [
+            ["-s", "create symbolic link instead of hard"],
+            ["-f", "force removal of existing destination"],
+            ["-i", "prompt before overwrite"],
+            ["-n", "treat destination as normal file"],
+            ["-v", "verbose output"]
+        ],
+        "tags": ["link", "hardlink", "symlink", "file", "shortcut", "reference", "ln"]
+    },
+    {
+        "name": "top",
+        "description": "display real-time system processes",
+        "usage": "top [args]",
+        "args": [
+            ["-d", "set delay between updates"],
+            ["-p", "monitor only specific PIDs"],
+            ["-u", "show only processes of user"],
+            ["-b", "batch mode"],
+            ["-n", "number of iterations"]
+        ],
+        "tags": ["process", "monitor", "system", "cpu", "memory", "real-time", "top", "task"]
+    },
+    {
+        "name": "systemctl",
+        "description": "control the systemd system and service manager",
+        "usage": "systemctl [command] [unit]",
+        "args": [
+            ["start", "start a unit"],
+            ["stop", "stop a unit"],
+            ["restart", "restart a unit"],
+            ["status", "show status of a unit"],
+            ["enable", "enable a unit to start at boot"],
+            ["disable", "disable a unit"],
+            ["list-units", "list active units"]
+        ],
+        "tags": ["systemd", "service", "manager", "control", "start", "stop", "enable", "disable", "systemctl"]
+    },
+    {
+        "name": "ip",
+        "description": "show / manipulate routing, devices, policy routing and tunnels",
+        "usage": "ip [object] [command]",
+        "args": [
+            ["addr", "show or manipulate IP addresses"],
+            ["link", "show or manipulate network interfaces"],
+            ["route", "show or manipulate routing table"],
+            ["neigh", "show or manipulate neighbor cache (ARP)"],
+            ["-s", "show statistics"]
+        ],
+        "tags": ["network", "interface", "ip", "address", "route", "routing", "device", "networking", "ip"]
+    },
+    {
+        "name": "ping",
+        "description": "send ICMP ECHO_REQUEST to network hosts",
+        "usage": "ping [args] destination",
+        "args": [
+            ["-c", "stop after sending count packets"],
+            ["-i", "interval between packets"],
+            ["-s", "packet size"],
+            ["-t", "time to live"],
+            ["-W", "timeout in seconds"]
+        ],
+        "tags": ["network", "ping", "icmp", "latency", "reachability", "host", "test", "connectivity"]
+    },
+    {
+        "name": "nano",
+        "description": "simple text editor",
+        "usage": "nano [args] file",
+        "args": [
+            ["-B", "backup existing file"],
+            ["-m", "enable mouse support"],
+            ["-l", "show line numbers"],
+            ["-i", "auto-indent"],
+            ["-c", "constantly show cursor position"]
+        ],
+        "tags": ["editor", "text", "file", "edit", "nano", "terminal", "simple"]
+    },
+    {
+        "name": "rmdir",
+        "description": "removes empty directories",
+        "usage": "rmdir [args] directory_name",
+        "args": [
+            ["-p", "remove directory and its ancestors"],
+            ["--ignore-fail-on-non-empty", "ignore errors if directory is not empty"],
+            ["-v", "verbose output, show each removed directory"]
+        ],
+        "tags": ["remove", "directory", "delete", "empty", "rmdir", "parent", "ancestors", "folder", "cleanup", "erase", "verbose"]
+    },
+    {
+        "name": "shutdown",
+        "description": "shut down or restart the system",
+        "usage": "shutdown [args] [time] [message]",
+        "args": [
+            ["-h", "halt or power off after shutdown"],
+            ["-r", "reboot after shutdown"],
+            ["-c", "cancel a pending shutdown"],
+            ["-P", "power off the system"],
+            ["-k", "don't actually shutdown, just send warning messages"],
+            ["now", "shutdown immediately"],
+            ["+m", "shutdown in m minutes"],
+            ["hh:mm", "shutdown at specified time"]
+        ],
+        "tags": ["shutdown", "poweroff", "reboot", "restart", "halt", "system", "turn off", "stop", "cancel", "time", "power"]
     }
 ]
