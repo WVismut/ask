@@ -5,14 +5,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <libstemmer.h>
+#include <math.h>
 
 int main(int argc, char *argv[]) {
     // if no arguments provided
     if (argc == 1) {
         printf("You should provide at least one argumnet!\n"
                "Here are a few examples, of how you should use this command\n"
-               "ask How to see contant of a text file?\n"
-               "ask How to update my system?\n");
+               "ask How to see content of a text file?\n"
+               "ask How to create a directory?\n");
         return 1;
     }
 
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
     if (commands_file == NULL) {
         printf("Error opening file!\n"
                "(commands_file pointer is equals to null)\n"
-               "Check is there actually a file called \"commands.json\" in this directory\n");
+               "Is there actually a file called \"commands.json\"?\n");
         return 1;
     }
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // chech, if the *json is an array
+    // check, if the *json is an array
     if (!cJSON_IsArray(json)) {
         printf("JSON parsing error!\n"
                "(expexted *json to be array)\n"
@@ -65,19 +66,16 @@ int main(int argc, char *argv[]) {
     }
 
     // variables
-    cJSON *command = NULL;
-    cJSON *command_name = NULL;
-    cJSON *command_tags = NULL;
+
     cJSON *best_candidate = NULL;
     cJSON *tag = NULL;
 
+    size_t json_size = cJSON_GetArraySize(json); // soon, a lot of loops will use this
     int tag_index;
-    int best_score = 0;
-    int current_score;
-    int commands_index = 0;
-    int max_len = 0;
 
-    int *tag_frequency = malloc(sizeof(int) * (argc - 1));
+    int *tag_frequency = calloc((argc - 1), sizeof(int));
+    bool *scores = calloc(cJSON_GetArraySize(json) * (argc - 1), sizeof(bool));
+    double tf_idf_score = 0;
     char **stemmed_args = malloc(sizeof(char*) * (argc - 1));
 
     // stemm arguments and convert to lowercase
@@ -94,31 +92,37 @@ int main(int argc, char *argv[]) {
             lowercase[j] = tolower(argv[i][j]);
         }
         lowercase[len] = 0;
+
+        // stemm this thing
         const unsigned char *stemmed = sb_stemmer_stem(
                     stemmer,
                     (const unsigned char*)lowercase,
                     strlen(lowercase)
                 );
+        
         if (stemmed == NULL) {
             printf("Fatal error: stemmer returned null!\n");
             return 1;
         }
-        printf("STEMMED: %s\n", stemmed);
+
         stemmed_args[i - 1] = malloc(sizeof(char) * (strlen(stemmed) + 1));
         strcpy(stemmed_args[i - 1], stemmed);
     }
 
+    // variables required for search loop
+    int commands_index = 0;
+    cJSON *command = NULL;
+    cJSON *command_name = NULL;
+    cJSON *command_tags = NULL;
+
     // search loop
     while (true) {
-        // reset current score
-        current_score = 0;
 
         // get command
         command = cJSON_GetArrayItem(json, commands_index);
         command_name = cJSON_GetObjectItem(command, "name");
         command_tags = cJSON_GetObjectItem(command, "tags");
 
-        // get the score of the command
         tag_index = 0;
         tag = cJSON_GetArrayItem(command_tags, tag_index);
 
@@ -137,8 +141,11 @@ int main(int argc, char *argv[]) {
             strcpy(tag_stem, stemmed_tag);
 
             for (int i = 1; i < argc; i++) {
-                if (strcmp(tag_stem, stemmed_args[i - 1]) == 0)
-                    current_score++;
+                if (strcmp(tag_stem, stemmed_args[i - 1]) == 0) {
+                    tag_frequency[i - 1]++;
+                    scores[commands_index * (argc - 1) + (i - 1)] = true;
+                    printf("Find a match!!!\n");
+                }
             }
 
             if (tag->next == NULL)
@@ -146,12 +153,6 @@ int main(int argc, char *argv[]) {
 
             tag_index++;
             tag = cJSON_GetArrayItem(command_tags, tag_index);
-        }
-
-
-        if (current_score > best_score) {
-            best_score = current_score;
-            best_candidate = command;
         }
 
         // if there are no more commands
@@ -162,15 +163,38 @@ int main(int argc, char *argv[]) {
         commands_index++;
     }
 
+    // tf-idf implementation
+    int best_candidate_index = -1;
+    double current_score;
+    double best_score = -1;
+    for (int i = 0; i < json_size; i++) {
+
+        current_score = 0;
+        for (int j = 0; j < (argc - 1); j++) {
+            printf("score[i * (argc - 1) + j]: %d\n", (int)scores[i * (argc - 1) + j]);
+            current_score += (double)(scores[i * (argc - 1) + j]) * log((json_size / (tag_frequency[j] + 1)));
+        }
+        printf("Score: %lf\n", current_score);
+
+        if (current_score > best_score) {
+            best_score = current_score;
+            best_candidate_index = i;
+        }
+    }
+
+    best_candidate = cJSON_GetArrayItem(json, best_candidate_index);
+    if (best_candidate_index == -1) {
+        printf("Best candidate is equals to null!\n");
+        printf("Best candidate index: %d\n", best_candidate_index);
+        return 1;
+    }
+    printf("Best score: %lf\n", best_score);
+    printf("Best candidate: %s\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring); // error here
+
     // free
     free(stemmed_args);
     free(tag_frequency);
-
-    printf("Best score: %d\n", best_score);
-    if (best_candidate != NULL)
-        printf("Best candidate: %s\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring);
-    else
-        printf("Cannot find anything...\n");
+    free(scores);
 
     // end of the program
     sb_stemmer_delete(stemmer);
