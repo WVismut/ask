@@ -1,0 +1,56 @@
+#!/bin/bash
+COMMANDS_DESTINATION="/usr/share/ask-commands"
+EXECUTABLE_DESTINATION="/usr/bin"
+COMMANDS="basic-linux-commands.json"
+ASK_FILE="ask.c"
+
+# Проверка наличия исходного файла
+if [ ! -f "$ASK_FILE" ]; then
+    echo "No file called \"ask.c\" in current directory, build aborted"
+    exit 1
+fi
+
+# Компиляция
+gcc ask.c -o ask -lstemmer -lcjson -lm -g
+if [ $? -ne 0 ]; then
+    echo "Compilation failed"
+    exit 1
+fi
+
+# Установка исполняемого файла
+sudo mv ask "$EXECUTABLE_DESTINATION/"
+if [ $? -eq 0 ]; then
+    echo "Executable installed to $EXECUTABLE_DESTINATION/ask"
+else
+    echo "Failed to move executable"
+    exit 1
+fi
+
+# Проверка и создание директории для команд
+if [ -e "$COMMANDS_DESTINATION" ] && [ ! -d "$COMMANDS_DESTINATION" ]; then
+    echo "Error: $COMMANDS_DESTINATION exists but is not a directory."
+    echo "Please remove it or fix the conflict manually."
+    exit 1
+fi
+
+if [ ! -d "$COMMANDS_DESTINATION" ]; then
+    sudo mkdir -p "$COMMANDS_DESTINATION"
+    echo "Created directory $COMMANDS_DESTINATION"
+else
+    echo "Directory $COMMANDS_DESTINATION already exists"
+fi
+
+# Копирование файла команд, если его нет
+if [ ! -f "$COMMANDS_DESTINATION/$COMMANDS" ]; then
+    sudo cp "$COMMANDS" "$COMMANDS_DESTINATION/"
+    if [ $? -eq 0 ]; then
+        echo "Copied $COMMANDS to $COMMANDS_DESTINATION/"
+    else
+        echo "Failed to copy $COMMANDS"
+        exit 1
+    fi
+else
+    echo "File $COMMANDS_DESTINATION/$COMMANDS already exists, no copy required"
+fi
+
+exit 0

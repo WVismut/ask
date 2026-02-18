@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FILE *commands_file = fopen("commands.json", "r");
+    FILE *commands_file = fopen("/usr/share/ask-commands/basic-linux-commands.json", "r");
     if (commands_file == NULL) {
         printf("Error opening file!\n"
                "(commands_file pointer is equals to null)\n"
-               "Is there actually a file called \"commands.json\"?\n");
+               "Is there actually a file \"/usr/share/commands.json\"?\n");
         return 1;
     }
 
