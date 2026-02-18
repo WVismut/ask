@@ -193,7 +193,14 @@ int main(int argc, char *argv[]) {
     printf("Best candidate: " BG_GREEN "%s" RESET "\n", cJSON_GetObjectItem(best_candidate, "name")->valuestring);
     printf("Description: %s\n", cJSON_GetObjectItem(best_candidate, "description")->valuestring);
     printf("Usage: %s\n", cJSON_GetObjectItem(best_candidate, "usage")->valuestring);
+
+    cJSON *command_args = cJSON_GetObjectItem(best_candidate, "args");
+    int n_command_args = cJSON_GetArraySize(command_args);
     printf("\n");
+    for (int i = 0; i < n_command_args; i++)
+        printf(BG_YELLOW "%s" RESET " - %s\n", cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 0)->valuestring, cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 1)->valuestring);
+    printf("\n");
+
     printf("Relevance of your keywords.\n" BG_GREEN "green" RESET " - keyword corresponds to given result\n" 
                                            BG_YELLOW "yellow" RESET " - keyword does exist bu doesn't correspond to result\n"
                                            BG_RED "red" RESET " - keyword doesn't exist\n" RESET);

@@ -70,7 +70,7 @@
             ["-v", "verbose output"],
             ["-a", "archive mode (preserve attributes)"]
         ],
-        "tags": ["copy", "file", "duplicate", "backup", "clone", "cp", "recursive", "interactive", "update", "verbose", "archive", "preserve"]
+        "tags": ["copy", "file", "duplicate", "backup", "clone", "cp", "recursive", "interactive", "verbose", "archive", "preserve"]
     },
     {
         "name": "mv",
@@ -82,7 +82,7 @@
             ["-v", "verbose output"],
             ["-n", "do not overwrite existing files"]
         ],
-        "tags": ["move", "rename", "file", "directory", "mv", "interactive", "update", "verbose"]
+        "tags": ["move", "rename", "file", "directory", "mv", "interactive", "verbose"]
     },
     {
         "name": "cat",
@@ -94,7 +94,7 @@
             ["-s", "squeeze multiple blank lines"],
             ["-E", "show $ at end of each line"]
         ],
-        "tags": ["view", "read", "file", "display", "concatenate", "show", "cat", "number", "squeeze"]
+        "tags": ["view", "read", "file", "display", "concatenate", "show", "cat", "number", "squeeze", "content", "text"]
     },
     {
         "name": "less",
