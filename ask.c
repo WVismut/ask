@@ -82,7 +82,26 @@ int main(int argc, char *argv[]) {
     int *tag_frequency = calloc((argc - 1), sizeof(int));
     bool *scores = calloc(cJSON_GetArraySize(json) * (argc - 1), sizeof(bool));
     double tf_idf_score = 0;
-    char **stemmed_args = malloc(sizeof(char*) * (argc - 1));
+    char **stemmed_args = calloc(argc - 1, sizeof(char*));
+
+    // array of words that are useless for search
+    const char* prepositions_and_articles[] = {
+        // articles
+        "the", "a", "an",
+        
+        // preposition
+        "in", "on", "at", "to", "for", "with", "by", "from", "of", "about",
+        "over", "under", "above", "below", "between", "among", "through",
+        "during", "before", "after", "since", "until", "up", "down", "into",
+        "onto", "upon", "within", "without", "behind", "beside", "beneath",
+        "beyond", "against", "along", "across", "around", "toward", "towards",
+
+        // question words
+        "who", "what", "where", "when", "why", "which", "whose", "whom",
+        "how",
+    };
+    int len_of_prepositions_and_articles = sizeof(prepositions_and_articles) / sizeof(char*);
+    bool *to_skip = calloc(len_of_prepositions_and_articles, sizeof(bool));
 
     // stemm arguments and convert to lowercase
     for (int i = 1; i < argc; i++) {
@@ -99,6 +118,14 @@ int main(int argc, char *argv[]) {
         }
         lowercase[len] = 0;
 
+        for (int j = 0; j < len_of_prepositions_and_articles; j++)
+            if (strcmp(prepositions_and_articles[j], lowercase) == 0) {
+                to_skip[i - 1] = true;
+                goto skip_stemming; // I LOVE GOTOs :D
+                                    // this goto point to the end of outer cycle
+            }
+        
+
         // stemm this thing
         const unsigned char *stemmed = sb_stemmer_stem(
                     stemmer,
@@ -113,6 +140,7 @@ int main(int argc, char *argv[]) {
 
         stemmed_args[i - 1] = malloc(sizeof(char) * (strlen(stemmed) + 1));
         strcpy(stemmed_args[i - 1], stemmed);
+        skip_stemming: // if arg is one of useless words
     }
 
     // variables required for search loop
@@ -147,6 +175,8 @@ int main(int argc, char *argv[]) {
             strcpy(tag_stem, stemmed_tag);
 
             for (int i = 1; i < argc; i++) {
+                if (to_skip[i - 1])
+                    continue;
                 if (strcmp(tag_stem, stemmed_args[i - 1]) == 0) {
                     tag_frequency[i - 1]++;
                     scores[commands_index * (argc - 1) + (i - 1)] = true;
@@ -159,12 +189,12 @@ int main(int argc, char *argv[]) {
             tag_index++;
             tag = cJSON_GetArrayItem(command_tags, tag_index);
         }
-
+        
         // if there are no more commands
         if (command->next == NULL)
             break;
 
-        // update the value of *command var
+
         commands_index++;
     }
 
@@ -198,25 +228,31 @@ int main(int argc, char *argv[]) {
     int n_command_args = cJSON_GetArraySize(command_args);
     printf("\n");
     for (int i = 0; i < n_command_args; i++)
-        printf(BG_YELLOW "%s" RESET " - %s\n", cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 0)->valuestring, cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 1)->valuestring);
+        printf(BG_YELLOW "%s" RESET " - %s\n", cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 0)->valuestring,
+                                               cJSON_GetArrayItem(cJSON_GetArrayItem(command_args, i), 1)->valuestring);
     printf("\n");
 
     printf("Relevance of your keywords.\n" BG_GREEN "green" RESET " - keyword corresponds to given result\n" 
-                                           BG_YELLOW "yellow" RESET " - keyword does exist bu doesn't correspond to result\n"
-                                           BG_RED "red" RESET " - keyword doesn't exist\n" RESET);
+                                           BG_YELLOW "yellow" RESET " - keyword does exist but doesn't correspond to result\n"
+                                           BG_RED "red" RESET " - keyword doesn't exist\n"
+                                           "no color - word is useless for search engine\n");
     for (int i = 1; i < argc; i++)
-        if (scores[best_candidate_index * (argc - 1) + (i - 1)])
-            printf(BG_GREEN "%s" RESET " ", argv[i]);
-        else if (tag_frequency[i - 1] > 0)
-            printf(BG_YELLOW "%s" RESET " ", argv[i]);
+        if (!to_skip[i - 1])
+            if (scores[best_candidate_index * (argc - 1) + (i - 1)])
+                printf(BG_GREEN "%s" RESET " ", argv[i]);
+            else if (tag_frequency[i - 1] > 0)
+                printf(BG_YELLOW "%s" RESET " ", argv[i]);
+            else
+                printf(BG_RED "%s" RESET " ", argv[i]);
         else
-            printf(BG_RED "%s" RESET " ", argv[i]);
+            printf("%s ", argv[i]);
     printf("\n");
 
     // free
     free(stemmed_args);
     free(tag_frequency);
     free(scores);
+    free(to_skip);
 
     // end of the program
     sb_stemmer_delete(stemmer);

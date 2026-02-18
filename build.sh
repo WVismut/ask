@@ -1,1 +1,2 @@
+#!/bin/bash
 gcc ask.c -o ask -lstemmer -lcjson -lm -g

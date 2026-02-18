@@ -12,3 +12,4 @@ You can make the main program faster by editing the `ask.c` file, or add more co
 
 ## How to build it?
 Use this command: `gcc ask.c -o ask -lstemmer -lcjson -lm -g`
+Or just run the `build.sh` file
