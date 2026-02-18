@@ -1,56 +1,134 @@
 #!/bin/bash
-COMMANDS_DESTINATION="/usr/share/ask-commands"
-EXECUTABLE_DESTINATION="/usr/bin"
-COMMANDS="basic-linux-commands.json"
-ASK_FILE="ask.c"
 
-# Проверка наличия исходного файла
-if [ ! -f "$ASK_FILE" ]; then
-    echo "No file called \"ask.c\" in current directory, build aborted"
-    exit 1
-fi
+# =============================================
+# Installation script for the 'ask' program
+# =============================================
 
-# Компиляция
-gcc ask.c -o ask -lstemmer -lcjson -lm -g
-if [ $? -ne 0 ]; then
-    echo "Compilation failed"
-    exit 1
-fi
+# Configuration variables
+PROJECT_NAME="ask"                              # Name of the executable
+COMMANDS_DESTINATION="/usr/share/ask-commands"  # Where to store commands.json
+EXECUTABLE_DESTINATION="/usr/bin"               # Where to install the binary
+COMMANDS="commands.json"                        # Commands data file
+ASK_FILE="ask.c"                                # Source code file
 
-# Установка исполняемого файла
-sudo mv ask "$EXECUTABLE_DESTINATION/"
-if [ $? -eq 0 ]; then
-    echo "Executable installed to $EXECUTABLE_DESTINATION/ask"
-else
-    echo "Failed to move executable"
-    exit 1
-fi
-
-# Проверка и создание директории для команд
-if [ -e "$COMMANDS_DESTINATION" ] && [ ! -d "$COMMANDS_DESTINATION" ]; then
-    echo "Error: $COMMANDS_DESTINATION exists but is not a directory."
-    echo "Please remove it or fix the conflict manually."
-    exit 1
-fi
-
-if [ ! -d "$COMMANDS_DESTINATION" ]; then
-    sudo mkdir -p "$COMMANDS_DESTINATION"
-    echo "Created directory $COMMANDS_DESTINATION"
-else
-    echo "Directory $COMMANDS_DESTINATION already exists"
-fi
-
-# Копирование файла команд, если его нет
-if [ ! -f "$COMMANDS_DESTINATION/$COMMANDS" ]; then
-    sudo cp "$COMMANDS" "$COMMANDS_DESTINATION/"
-    if [ $? -eq 0 ]; then
-        echo "Copied $COMMANDS to $COMMANDS_DESTINATION/"
+# ------------------------------------------------------------------
+# Function: install_dependencies
+# Purpose: Detect the Linux distribution and install required libraries
+# ------------------------------------------------------------------
+install_dependencies() {
+    echo "Installing dependencies..."
+    
+    # Check for Debian/Ubuntu
+    if [ -f /etc/debian_version ]; then
+        sudo apt update
+        sudo apt install -y libcjson-dev libstemmer-dev gcc make
+    
+    # Check for Fedora/RHEL/CentOS
+    elif [ -f /etc/fedora-release ]; then
+        sudo dnf install -y cjson-devel libstemmer-devel gcc make
+    
+    # Check for Arch Linux
+    elif [ -f /etc/arch-release ]; then
+        sudo pacman -S --noconfirm cjson libstemmer gcc make
+    
+    # Unknown distribution
     else
-        echo "Failed to copy $COMMANDS"
+        echo "Warning: Could not determine distribution."
+        echo "Make sure the following are installed: libcjson-dev, libstemmer-dev"
+        read -p "Continue? (y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
+    fi
+}
+
+# ------------------------------------------------------------------
+# Function: check_headers
+# Purpose: Verify that required header files exist
+# ------------------------------------------------------------------
+check_headers() {
+    # Check for cJSON header in standard locations
+    if [ ! -f /usr/include/cjson/cJSON.h ] && [ ! -f /usr/local/include/cjson/cJSON.h ]; then
+        echo "cJSON header not found. Installing dependencies..."
+        install_dependencies
+    fi
+    
+    # Check for libstemmer header in standard locations
+    if [ ! -f /usr/include/libstemmer.h ] && [ ! -f /usr/local/include/libstemmer.h ]; then
+        echo "libstemmer header not found. Installing dependencies..."
+        install_dependencies
+    fi
+}
+
+# ------------------------------------------------------------------
+# Function: main
+# Purpose: Main installation logic
+# ------------------------------------------------------------------
+main() {
+    echo "=== $PROJECT_NAME Installation Script ==="
+    
+    # Step 1: Check if source file exists in current directory
+    if [ ! -f "$ASK_FILE" ]; then
+        echo "Error: No file called \"$ASK_FILE\" in current directory, build aborted"
         exit 1
     fi
-else
-    echo "File $COMMANDS_DESTINATION/$COMMANDS already exists, no copy required"
-fi
+    echo "✓ Source file found: $ASK_FILE"
+    
+    # Step 2: Check and install dependencies if needed
+    echo "Checking dependencies..."
+    check_headers
+    echo "✓ Dependencies satisfied"
+    
+    # Step 3: Compile the program
+    echo "Compiling $PROJECT_NAME..."
+    gcc "$ASK_FILE" -o "$PROJECT_NAME" -lstemmer -lcjson -lm -g
+    
+    # Check if compilation succeeded
+    if [ $? -ne 0 ]; then
+        echo "✗ Compilation failed!"
+        exit 1
+    fi
+    echo "✓ Compilation successful"
+    
+    # Step 4: Install the executable
+    echo "Installing executable to $EXECUTABLE_DESTINATION/..."
+    sudo mv "$PROJECT_NAME" "$EXECUTABLE_DESTINATION/"
+    echo "✓ Executable installed"
+    
+    # Step 5: Handle the commands.json file
+    echo "Setting up commands file..."
+    
+    # Check if destination exists but is not a directory
+    if [ -e "$COMMANDS_DESTINATION" ] && [ ! -d "$COMMANDS_DESTINATION" ]; then
+        echo "✗ Error: $COMMANDS_DESTINATION exists but is not a directory"
+        echo "  Please remove this file or fix the conflict manually:"
+        echo "  sudo rm -f $COMMANDS_DESTINATION"
+        exit 1
+    fi
+    
+    # Create destination directory if it doesn't exist
+    sudo install -d -m 755 "$COMMANDS_DESTINATION"
+    
+    # Copy commands.json if it doesn't already exist
+    if [ ! -f "$COMMANDS_DESTINATION/$COMMANDS" ]; then
+        sudo install -m 644 "$COMMANDS" "$COMMANDS_DESTINATION/"
+        echo "✓ Copied $COMMANDS to $COMMANDS_DESTINATION/"
+    else
+        echo "  File $COMMANDS_DESTINATION/$COMMANDS already exists, skipping copy"
+    fi
+    
+    # Step 6: Installation complete
+    echo ""
+    echo "=== Installation Complete! ==="
+    echo "You can now run the program by typing: $PROJECT_NAME"
+    echo ""
+    echo "Program location: $EXECUTABLE_DESTINATION/$PROJECT_NAME"
+    echo "Commands file: $COMMANDS_DESTINATION/$COMMANDS"
+}
 
-exit 0
+# Run the main function
+main
+
+# MAAAAAN I HATE BASH SCRIPTS D:<
+# So I vibecoded it :)
